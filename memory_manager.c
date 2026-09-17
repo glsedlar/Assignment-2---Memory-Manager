@@ -22,23 +22,32 @@ void create_inventory() {
     printf("\n=== PART 1: CREATE INVENTORY ===\n");
     
     int inventory_size = 5;
-    int *item_ids = NULL;
-    int *quantities = NULL;
+    
     
     // TODO: Allocate memory for item_ids array (5 integers)
-    
+
+    int *item_ids = (int*)malloc(inventory_size * sizeof(int));
     
     // TODO: Check if malloc succeeded by comparing item_ids to NULL
     // If allocation failed, print "Failed to allocate item_ids" and return
     
+    if (item_ids == NULL) {
+        printf("Failed to allocate item_ids\n");
+        return;
+    }
     
     
     // TODO: Allocate memory for quantities array (5 integers)
     
-    
+    int *quantities = (int*)malloc(inventory_size * sizeof(int));
+
     // TODO: Check if malloc succeeded for quantities
     // If allocation failed, print "Failed to allocate quantities" and return
     
+    if (quantities == NULL) {
+        printf("Failed to allocate quantities/n");
+        return;
+    }
     
     
     // Fill the inventory with starting items
@@ -51,9 +60,11 @@ void create_inventory() {
     
     // TODO: Free the allocated memory for item_ids
     
+    free(item_ids);
     
     // TODO: Free the allocated memory for quantities
     
+    free(quantities);
     
     printf("Memory freed successfully.\n");
 }
@@ -69,24 +80,31 @@ void expand_inventory() {
     
     int initial_size = 3;
     int expanded_size = 6;
-    int *item_ids = NULL;
-    int *quantities = NULL;
+    
     
     // TODO: Allocate memory for item_ids array (3 integers)
-    
+
+    int *item_ids = (int*)malloc(initial_size * sizeof(int));
     
     // TODO: Check if malloc succeeded
     // If allocation failed, print "Failed to allocate item_ids" and return
     
-    
+    if (item_ids == NULL) {
+        printf("Failed to allocate item_ids/n");
+        return;
+    }
     
     // TODO: Allocate memory for quantities array (3 integers)
     
-    
+    int *quantities = (int*)malloc(initial_size * sizeof(int));
+
     // TODO: Check if malloc succeeded for quantities
     // If allocation failed, print "Failed to allocate quantities" and return
     
-    
+    if (quantities == NULL) {
+        printf("Failed to allocate quantities/n");
+        return;
+    }
     
     // Fill initial inventory
     printf("Initial inventory (size %d):\n", initial_size);
@@ -101,16 +119,26 @@ void expand_inventory() {
     // TODO: Use realloc to expand item_ids from 3 to 6 integers
     // Store the result back in item_ids    
     
+    item_ids = (int*)realloc(item_ids, expanded_size * sizeof(int));
+
+
     // TODO: Check if realloc succeeded
     
-    
+    if(item_ids == NULL) {
+        printf("Reallocation failed!");
+        return;
+    }
     
     // TODO: Use realloc to expand quantities from 3 to 6 integers
     
+    quantities = (int*)realloc(quantities, expanded_size * sizeof(int));
     
     // TODO: Check if realloc succeeded
     
-    
+    if(quantities == NULL) {
+        printf("Reallocation failed!");
+        return;
+    }
     
     // Add new items to expanded inventory
     for (int i = initial_size; i < expanded_size; i++) {
@@ -126,9 +154,11 @@ void expand_inventory() {
     
     // TODO: Free the allocated memory for item_ids
     
+    free(item_ids);
     
     // TODO: Free the allocated memory for quantities
     
+    free(quantities);
     
     printf("Memory freed successfully.\n");
 }
@@ -188,6 +218,7 @@ void memory_leak_fixed() {
         
         // TODO: Free the memory to prevent the leak
         
+        free(temp_item);
         
     }
     
@@ -223,14 +254,21 @@ void safe_pointer_handling() {
     // TODO: Set player_health to NULL after freeing to avoid dangling pointer
     // This prevents accidentally using the freed memory
     
+    player_health == NULL;
     
+
     // TODO: Before using player_health, check if it's NULL
     // If it's not NULL, print the value. If it is NULL, print "Health data not available"
     // Hint: Use an if statement to check: if (player_health != NULL)
     
-    
-    
-    
+    if (player_health != NULL) {
+        printf("Player health: %d/n", *player_health);
+        return;
+    }
+
+    else {
+        printf("Health data not available/n");
+    }  
     
     
     printf("Safe pointer handling complete.\n");

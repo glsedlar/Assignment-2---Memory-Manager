@@ -1,0 +1,45 @@
+Memory Leak Observations
+
+The loop at lines 176-190 caused the memory leak, because there was no free() function
+called in the loop to free the memory stored in the variable. The memory then became 
+inaccessible, and used memory stacks on top at 4000 bytes per loop, until the loop ends
+and 3906 KB of memory is allocated but never freed. If the loop ran 1000 times, the memory
+would continue to pile on top. This is what occurred in this assignment, as the loop ran for
+1000 cycles, and 4000 bytes were used each time, for a total allocated memory of 3906 KB.
+If it ran continuously for days, the memory would be allocated until all memory is exhausted.
+Adding the free() function fixed the problem by allowing the memory to be freed at the end of 
+each loop, and then that memory could be used again in the next loop cycle. This drastically
+changed the amount of memory consumed by this code; instead of 4000 bytes leaked every loop 
+for 1000 loops, the 4000 bytes of memory is constantly freed and reallocated, allowing only
+4000 bytes to be the memory used by this function. This shows the importance of having the
+memory freed in the loop - otherwise the memory leaks will multiply.
+
+Python vs C Memory Management
+
+Firstly, in Python, you do not have to initially specify the size of the array before
+initializing it. In C, you have to specifically allocate the memory required for the array
+before filling it, meaning you have to know the size of the array at the start. Additionally,
+in Python you do not have to allocate the memory manually, while in C, that step is required.
+Secondly, since in Python, you can constantly add items to an array, and Python will invisibly
+edit the size of the array to fit the new items. However, in C, since the size of the array 
+must be explicitly stated in the initialization, the memory must then be reallocated to fit 
+the new array items. Python handles this step invisibly, while C requires explicit memory
+management. Additionally, in Python, when an object has a refernce count of 0, Python
+automatically frees the memory, but in C, the memory must be explicitly freed using the free()
+function. Just as was seen in the first portion of the reflection, not freeing the memory 
+causes memory leaks. However, in Python, there are multiple levels of protection against memory
+leaks; in addition to the reference count method, Python divides objects into 3 generation
+based on their lifetime and use, and then periodically scans for unreachable objects within
+those generations. For example, if two variable reference each other but are no longer accessible,
+Python will use its general garbage collection to scan through the variables, find that they
+are no longer used, and discard them.
+
+Garbage Collection Trade-offs
+
+While Python's garbage collector is safe and convenient for preventing memory leaks, it does have 
+trade-offs, such as using CPU cycles, pause times, and memory overhead. Python must remember the
+reference count for each object, the generation number that the object is in, and how long between
+scan cycles, in addition to the actual time used to scan for unreachable cycles.Therefore, a systems 
+programmer may choose C's manual memory management to
+save on the overhead and time that Python's automatic memory management uses. Even though C has the 
+risk of potential memory leaks and crashes, it consumes minimal overhead and works efficiently.
